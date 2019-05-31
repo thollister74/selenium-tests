@@ -1,6 +1,6 @@
 package com.tim;
 
-import org.junit.Test;
+import org.junit.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
@@ -8,14 +8,34 @@ import org.openqa.selenium.chrome.ChromeDriver;
  * Created by hollisti on 2019-05-24.
  */
 public class GooglePageTests {
+    @BeforeClass
+    public static void beforeClassSetup(){
+        System.out.println("set up for the 'beforeClass' ");
+
+    }
+
+    @AfterClass
+    public static void afterClassCleanup(){
+        System.out.println("Clean up step for After Class");
+    }
+    @Before
+    public void beforeTestSetip(){
+
+        System.out.println("Printing from before annotation");
+    }
+
+    @After
+    public void afterCleanup(){
+        System.out.println("Run this after the test");
+    }
 
     @Test
     public void verifyGooglePage(){
         System.out.println("Tim's first test");
         /*Testing Google
         1. Open browser*/
-        System.setProperty("webdriver.chrome.driver", "C:\\lib\\chromedriver.exe");
-        WebDriver driver = new ChromeDriver();
+//        System.setProperty("webdriver.chrome.driver", "C:\\lib\\chromedriver.exe");
+//        WebDriver driver = new ChromeDriver();
 
 //        2. Navigate to google
 
