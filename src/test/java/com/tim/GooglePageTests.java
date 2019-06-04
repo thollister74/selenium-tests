@@ -5,6 +5,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertTrue;
@@ -36,7 +38,7 @@ public class GooglePageTests {
     }
 
     @Test
-    public void verifyGooglePage(){
+    public void verifyGooglePage() throws InterruptedException {
         System.out.println("Tim's first test");
         //Testing Google
         //1. Open browser
@@ -57,8 +59,15 @@ public class GooglePageTests {
         searchButton.click();
 
 //        5. Verify search results match
-        
-
+        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+        List<WebElement> searchResults = driver.findElements(By.partialLinkText("Selenium - Web Browser"));
+//        //added if statement to avoid an exception. Thanks, Stackoverflow!
+        if (!searchResults.isEmpty())
+        {
+          searchResults.get(0).click();
+        }
+        Thread.sleep(2000);
+        driver.close();
 //        //annotation and verification
 
 
