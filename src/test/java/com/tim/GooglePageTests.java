@@ -6,6 +6,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+import static org.junit.Assert.assertTrue;
+
 /**
  * Created by hollisti on 2019-05-24.
  */
@@ -51,8 +53,9 @@ public class GooglePageTests {
         WebElement searchButton = driver.findElement(By.name("btnK"));
         searchButton.click();
 
-
 //        5. Verify search results match
+        
+
 //        //annotation and verification
 
 
