@@ -49,7 +49,7 @@ public class GooglePageTests {
 
 //        3. Enter 'selenium' in search field
         WebElement search = driver.findElement(By.name("q"));
-        search.sendKeys("automated testing using Selenium");
+        search.sendKeys("SeleniumHq");
 
 //        4. click Search button
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
