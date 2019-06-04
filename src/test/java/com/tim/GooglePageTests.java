@@ -48,8 +48,10 @@ public class GooglePageTests {
         search.sendKeys("automated testing using Selenium");
 
 //        4. click Search button
-        WebElement searchButton = driver.findElement(By.id("gbqfbb"));
-        
+        WebElement searchButton = driver.findElement(By.name("btnK"));
+        searchButton.click();
+
+
 
 //        5. Verify search results match
 //        //annotation and verification
@@ -59,14 +61,14 @@ public class GooglePageTests {
     @Test
     public void test2(){
         System.out.println("Tim's second test");
-        /*Testing Google
-        1. Open browser
-        2. Navigate to google
-        3. Enter 'selenium' in search field
-        4. click Search button
-        5. Verify search results match
-        */
-        //annotation and verification
+//        Testing Google
+//        1. Open browser
+//        2. Navigate to google
+//        3. Enter 'selenium' in search field
+//        4. click Search button
+//        5. Verify search results match
+//        */
+//        //annotation and verification
 
 
     }
