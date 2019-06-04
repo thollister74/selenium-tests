@@ -1,7 +1,9 @@
 package com.tim;
 
 import org.junit.*;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 /**
@@ -32,18 +34,23 @@ public class GooglePageTests {
     @Test
     public void verifyGooglePage(){
         System.out.println("Tim's first test");
-        /*Testing Google
-        1. Open browser*/
-//        System.setProperty("webdriver.chrome.driver", "C:\\lib\\chromedriver.exe");
-//        WebDriver driver = new ChromeDriver();
+        //Testing Google
+        //1. Open browser
+        System.setProperty("webdriver.chrome.driver", "C:\\lib\\chromedriver.exe");
+        WebDriver driver = new ChromeDriver();
 
 //        2. Navigate to google
-
+        driver.manage().window().maximize();
+        driver.get("https://google.com");
 
 //        3. Enter 'selenium' in search field
+        WebElement search = driver.findElement(By.name("q"));
+        search.sendKeys("automated testing using Selenium");
+
 //        4. click Search button
+        WebElement searchButton = driver.findElement(By.id("gbqfbb"));
+
 //        5. Verify search results match
-//        */
 //        //annotation and verification
 
 
