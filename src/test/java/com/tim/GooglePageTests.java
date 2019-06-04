@@ -52,7 +52,6 @@ public class GooglePageTests {
         searchButton.click();
 
 
-
 //        5. Verify search results match
 //        //annotation and verification
 
