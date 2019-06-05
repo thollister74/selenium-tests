@@ -1,16 +1,14 @@
 package com.tim;
 
 import org.junit.*;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
 import static org.junit.Assert.assertTrue;
-
+import static org.openqa.selenium.By.*;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by hollisti on 2019-05-24.
@@ -45,22 +43,22 @@ public class GooglePageTests {
         System.setProperty("webdriver.chrome.driver", "C:\\lib\\chromedriver.exe");
         WebDriver driver = new ChromeDriver();
 
-//        2. Navigate to google
+//        2. Maximize browser window and go to google.com
         driver.manage().window().maximize();
         driver.get("https://google.com");
 
-//        3. Enter 'selenium' in search field
-        WebElement search = driver.findElement(By.name("q"));
+//        3. Enter search criteria
+        WebElement search = driver.findElement(name("q"));
         search.sendKeys("SeleniumHq");
 
 //        4. click Search button
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-        WebElement searchButton = driver.findElement(By.name("btnK"));
+        WebElement searchButton = driver.findElement(name("btnK"));
         searchButton.click();
 
-//        5. Verify search results match
+//        5. Click a link from search results
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-        List<WebElement> searchResults = driver.findElements(By.partialLinkText("Selenium - Web Browser"));
+        List<WebElement> searchResults = driver.findElements(partialLinkText("Selenium - Web Browser"));
 //        //added if statement to avoid an exception. Thanks, Stackoverflow!
         if (!searchResults.isEmpty())
         {
@@ -68,20 +66,40 @@ public class GooglePageTests {
         }
         Thread.sleep(2000);
         driver.close();
-//        //annotation and verification
-
 
     }
+
+
     @Test
-    public void test2(){
+    public void loginToStatePortalUI(){
         System.out.println("Tim's second test");
 //        Testing Google
 //        1. Open browser
-//        2. Navigate to google
-//        3. Enter 'selenium' in search field
-//        4. click Search button
+        System.setProperty("webdriver.chrome.driver", "C:\\lib\\chromedriver.exe");
+        WebDriver driver = new ChromeDriver();
+
+//        2. Navigate to state portal ui in awstest (must be a way to modularize the url...
+        driver.manage().window().maximize();
+        driver.get("https://awstestplatform.sircon.com/govexternal/#/login?state=VA&taxType=PREMTAX&taxForm=ANNASSMT");
+
+//        3. Enter Email, NAICID, Password in search field
+        driver.manage().timeouts().implicitlyWait(10,TimeUnit.SECONDS);
+        WebElement userName = driver.findElement(id("username"));
+        userName.sendKeys("vaportaltester@gmail.com");
+        WebElement naicID = driver.findElement(id("userId"));
+        naicID.sendKeys("M0037");
+        WebElement password = driver.findElement(id("password"));
+        password.sendKeys("Sircon101!");
+
+//        4. click to login
+        WebElement signInButton = driver.findElement(className("btn-submit"));
+        signInButton.click();
+
 //        5. Verify search results match
-//        */
+
+
+
+
 //        //annotation and verification
 
 
