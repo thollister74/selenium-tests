@@ -41,7 +41,7 @@ public class GooglePageTests {
     @Test
     public void verifyGooglePage() throws InterruptedException {
         System.out.println("Tim's first test");
-        //Testing Google
+ //Simple script to run a Google search
         //1. Open browser
         System.setProperty("webdriver.chrome.driver", "C:\\lib\\chromedriver.exe");
         WebDriver driver = new ChromeDriver();
@@ -76,7 +76,7 @@ public class GooglePageTests {
     @Test
     public void loginToStatePortalUI(){
         System.out.println("Tim's second test");
-//        Testing Google
+//Testing against State Portal UI
 //        1. Open browser
         System.setProperty("webdriver.chrome.driver", "C:\\lib\\chromedriver.exe");
         WebDriver driver = new ChromeDriver();
@@ -108,7 +108,7 @@ public class GooglePageTests {
     @Test
     public void automationPracticeTests() throws InterruptedException {
         System.out.println("Tim's first test");
-        //Testing Google
+   //Testing using a sample site
         //1. Open browser
         System.setProperty("webdriver.chrome.driver", "C:\\lib\\chromedriver.exe");
         WebDriver driver = new ChromeDriver();
@@ -136,7 +136,7 @@ public class GooglePageTests {
         printedDressQuantity.clear();
         printedDressQuantity.sendKeys("999");
         Assert.assertSame("25,974.00", "25,974.00");
-        
+
 //        7. Clear quantity and try alpha characters
         printedDressQuantity = driver.findElement(id("quantity_wanted"));
         printedDressQuantity.clear();
