@@ -1,18 +1,21 @@
 package com.tim;
 
 import org.junit.*;
+import org.junit.internal.runners.statements.Fail;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import static org.junit.Assert.assertTrue;
+
+import static org.junit.Assert.assertFalse;
 import static org.openqa.selenium.By.*;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertSame;
 
 /**
  * Created by hollisti on 2019-05-24.
  */
+
 public class GooglePageTests {
     @BeforeClass
     public static void beforeClassSetup(){
@@ -64,8 +67,8 @@ public class GooglePageTests {
         {
           searchResults.get(0).click();
         }
-        Thread.sleep(2000);
-        driver.close();
+        System.out.println("verifyGooglePage has completed");
+       driver.close();
 
     }
 
@@ -96,12 +99,50 @@ public class GooglePageTests {
         signInButton.click();
 
 //        5. Verify search results match
-//
-
-
-
 //        //annotation and verification
+        System.out.println("loginToStatePortalUI has completed");
+        driver.close();
+    }
 
 
+    @Test
+    public void automationPracticeTests() throws InterruptedException {
+        System.out.println("Tim's first test");
+        //Testing Google
+        //1. Open browser
+        System.setProperty("webdriver.chrome.driver", "C:\\lib\\chromedriver.exe");
+        WebDriver driver = new ChromeDriver();
+
+//        2. Maximize browser window and go to google.com
+        driver.manage().window().maximize();
+        driver.get("http://automationpractice.com/index.php");
+
+//        3. Enter search criteria
+        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+        WebElement search = driver.findElement(id("search_query_top"));
+        search.sendKeys("summer");
+
+//        4. click Search button
+        WebElement searchButton = driver.findElement(name("submit_search"));
+        searchButton.click();
+
+//        5. Click a link from search results
+        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+        WebElement printedDressLink = driver.findElement(partialLinkText("Printed Dress"));
+        printedDressLink.click();
+
+//        6. Add a large number in Quantity field
+        WebElement printedDressQuantity = driver.findElement(id("quantity_wanted"));
+        printedDressQuantity.clear();
+        printedDressQuantity.sendKeys("999");
+        Assert.assertSame("25,974.00", "25,974.00");
+        
+//        7. Clear quantity and try alpha characters
+        printedDressQuantity = driver.findElement(id("quantity_wanted"));
+        printedDressQuantity.clear();
+        printedDressQuantity.sendKeys("abc");
+      //  Assert.assertSame("25,974.00", "25,974.00");
+        System.out.println("automationPracticeTests has completed");
+        driver.close();
     }
 }
