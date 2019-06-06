@@ -140,8 +140,8 @@ public class GooglePageTests {
         printedDressQuantity.sendKeys("999");
         WebElement addToCartButton = driver.findElement(name("Submit"));
         addToCartButton.click();
-        long expected;
-        long actual;
+        float expected;
+        float actual;
         Assert.assertEquals((actual = "25,974.00", expected = (999*26));
 
 
