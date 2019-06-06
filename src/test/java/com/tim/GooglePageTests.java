@@ -8,6 +8,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.openqa.selenium.By.*;
 import static org.junit.Assert.assertSame;
@@ -28,14 +29,16 @@ public class GooglePageTests {
         System.out.println("Clean up step for After Class");
     }
     @Before
-    public void beforeTestSetip(){
+    public void beforeTestSetip()
+    {
 
         System.out.println("Printing from before annotation");
-    }
+       }
 
     @After
     public void afterCleanup(){
         System.out.println("Run this after the test");
+;
     }
 
     @Test
@@ -106,9 +109,9 @@ public class GooglePageTests {
 
 
     @Test
-    public void automationPracticeTests() throws InterruptedException {
-        System.out.println("Tim's first test");
-   //Testing using a sample site
+    public void automationPracticeTests() throws InterruptedException
+    {
+ //Testing using a sample site
         //1. Open browser
         System.setProperty("webdriver.chrome.driver", "C:\\lib\\chromedriver.exe");
         WebDriver driver = new ChromeDriver();
@@ -135,14 +138,22 @@ public class GooglePageTests {
         WebElement printedDressQuantity = driver.findElement(id("quantity_wanted"));
         printedDressQuantity.clear();
         printedDressQuantity.sendKeys("999");
-        Assert.assertSame("25,974.00", "25,974.00");
+        WebElement addToCartButton = driver.findElement(name("Submit"));
+        addToCartButton.click();
+        long expected;
+        long actual;
+        Assert.assertEquals((actual = "25,974.00", expected = (999*26));
 
-//        7. Clear quantity and try alpha characters
+
+//       7. Confirm cart contents
+
+
+
+//        8. Clear quantity and try alpha characters
         printedDressQuantity = driver.findElement(id("quantity_wanted"));
         printedDressQuantity.clear();
         printedDressQuantity.sendKeys("abc");
-      //  Assert.assertSame("25,974.00", "25,974.00");
         System.out.println("automationPracticeTests has completed");
-        driver.close();
+
     }
 }
