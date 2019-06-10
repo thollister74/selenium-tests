@@ -1,14 +1,19 @@
 package com.tim;
 
-import org.junit.*;
+
+
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import static org.junit.Assert.*;
-import static org.openqa.selenium.By.*;
+import static org.junit.Assert.assertEquals;
 
 
 /**
@@ -16,141 +21,132 @@ import static org.openqa.selenium.By.*;
  */
 
 public class GooglePageTests {
+
+
+    private WebDriver driver;
+
     @BeforeClass
-    public static void beforeClassSetup(){
-        System.out.println("set up for the 'beforeClass' ");
+    public static void beforeClassSetup()
+    {
+    System.setProperty("webdriver.chrome.driver", "C:\\lib\\chromedriver.exe");
 
     }
 
     @AfterClass
-    public static void afterClassCleanup(){
-        System.out.println("Clean up step for After Class");
-    }
-    @Before
-    public void beforeTestSetip()
+    public static void afterClassCleanup()
     {
+        System.out.println("Clean up step for 'afterClass'");
+    }
 
-        System.out.println("Printing from before annotation");
-       }
+    @Before
+    public void beforeTestSetup()
+    {
+       driver  = new ChromeDriver();
+       driver.manage().window().maximize();
+       driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+       driver.manage().timeouts().pageLoadTimeout(90, TimeUnit.SECONDS);
+    }
 
     @After
-    public void afterCleanup(){
-        System.out.println("Run this after the test");
-;
+    public void afterCleanup()
+    {
+        driver.close();
     }
 
     @Test
     public void verifyGooglePage() throws InterruptedException {
         System.out.println("Tim's first test");
- //Simple script to run a Google search
-        //1. Open browser
-        System.setProperty("webdriver.chrome.driver", "C:\\lib\\chromedriver.exe");
-        WebDriver driver = new ChromeDriver();
+        //Simple script to run a Google search
+        //1. Open browser-moved to Before class
 
-//        2. Maximize browser window and go to google.com
-        driver.manage().window().maximize();
+
+//        2. Go to google.com
+
         driver.get("https://google.com");
 
 //        3. Enter search criteria
-        WebElement search = driver.findElement(name("q"));
-        search.sendKeys("SeleniumHq");
+        driver.findElement(By.name("q")).sendKeys("SeleniumHq");
 
 //        4. click Search button
-        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-        WebElement searchButton = driver.findElement(name("btnK"));
-        searchButton.click();
+         driver.findElement(By.name("btnK")).click();
 
 //        5. Click a link from search results, confirm landing page
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-        List<WebElement> searchResults = driver.findElements(partialLinkText("Selenium - Web Browser"));
+        List<WebElement> searchResults = driver.findElements(By.partialLinkText("Selenium - Web Browser"));
         searchResults.get(0).click();
-        Assert.assertEquals("SeleniumHQ",1,1);
+        assertEquals("SeleniumHQ", 0, 0);
 
         System.out.println("verifyGooglePage has completed");
-        driver.close();
+
 
     }
 
 
     @Test
-    public void loginToStatePortalUI(){
+    public void loginToStatePortalUI() {
         System.out.println("Tim's second test");
 //Testing against State Portal UI
 //        1. Open browser
-        System.setProperty("webdriver.chrome.driver", "C:\\lib\\chromedriver.exe");
-        WebDriver driver = new ChromeDriver();
+//          Moved to 'Before' class
+
 
 //        2. Navigate to state portal ui in awstest (must be a way to modularize the url...
-        driver.manage().window().maximize();
+
         driver.get("https://awstestplatform.sircon.com/govexternal/#/login?state=VA&taxType=PREMTAX&taxForm=ANNASSMT");
 
 //        3. Enter Email, NAICID, Password in search field
-        driver.manage().timeouts().implicitlyWait(10,TimeUnit.SECONDS);
-        WebElement userName = driver.findElement(id("username"));
-        userName.sendKeys("vaportaltester@gmail.com");
-        WebElement naicID = driver.findElement(id("userId"));
-        naicID.sendKeys("M0037");
-        WebElement password = driver.findElement(id("password"));
-        password.sendKeys("Sircon101!");
+      driver.findElement(By.id("username")).clear();
+      driver.findElement(By.id("username")).sendKeys("vaportaltester@gmail.com");
+      driver.findElement(By.id("userId")).clear();
+      driver.findElement(By.id("userId")).sendKeys("M0037");
+
+      driver.findElement(By.id("password")).clear();
+      driver.findElement(By.id("password")).sendKeys("Sircon101!");
 
 //        4. click to login
-        WebElement signInButton = driver.findElement(className("btn-submit"));
-        signInButton.click();
+      driver.findElement(By.className("btn-submit")).click();
 
 //        5. Verify search results match
 //        //annotation and verification
-        assertEquals("M0037",1,1); //Confirm NAIC matches ID entered at login
-        System.out.println("loginToStatePortalUI has completed");
-        driver.close();
+       assertEquals("M0037", 1, 1); //Confirm NAIC matches ID entered at login
+       System.out.println("loginToStatePortalUI has completed");
+
     }
 
 
     @Test
-    public void automationPracticeTests() throws InterruptedException
-    {
- //Testing using a sample site
+    public void automationPracticeTests() throws InterruptedException {
+        //Testing using a sample site
         //1. Open browser
-        System.setProperty("webdriver.chrome.driver", "C:\\lib\\chromedriver.exe");
-        WebDriver driver = new ChromeDriver();
 
 //        2. Maximize browser window and go to google.com
-        driver.manage().window().maximize();
         driver.get("http://automationpractice.com/index.php");
 
 //        3. Enter search criteria
-        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-        WebElement search = driver.findElement(id("search_query_top"));
-        search.sendKeys("summer");
+       driver.findElement(By.id("search_query_top")).sendKeys("summer");
 
 //        4. click Search button
-        WebElement searchButton = driver.findElement(name("submit_search"));
-        searchButton.click();
+        driver.findElement(By.name("submit_search")).click();
 
 //        5. Click a link from search results
-        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-        WebElement printedDressLink = driver.findElement(partialLinkText("Printed Dress"));
-        printedDressLink.click();
+        driver.findElement(By.partialLinkText("Printed Dress")).click();
 
 //        6. Add a large number in Quantity field
-        WebElement printedDressQuantity = driver.findElement(id("quantity_wanted"));
-        printedDressQuantity.clear();
-        printedDressQuantity.sendKeys("999");
-        WebElement addToCartButton = driver.findElement(name("Submit"));
-        addToCartButton.click();
+        driver.findElement(By.id("quantity_wanted")).clear();
+        driver.findElement(By.id("quantity_wanted")).sendKeys("999");
+        driver.findElement(By.name("Submit")).click();
 
 //       7. Confirm cost of order
-        assertEquals(25974.00, (999*26),0); //confirm amount matches expected
-        WebElement modalCloseButton = driver.findElement(xpath("//*[@id='layer_cart']/div[1]/div[1]/span"));
-        modalCloseButton.click();
+        assertEquals(25974.00, (999 * 26), 0); //confirm amount matches expected
+        driver.findElement(By.xpath("//*[@id='layer_cart']/div[1]/div[1]/span")).click();
 
 //        8. Clear quantity and try alpha characters
-        printedDressQuantity = driver.findElement(id("quantity_wanted"));
-        printedDressQuantity.clear();
-        printedDressQuantity.sendKeys("abc");
-        assertEquals("Null quantity",1,1);
+        driver.findElement(By.id("quantity_wanted")).clear();
+        driver.findElement(By.id("quantity_wanted")).sendKeys("abc");
+        assertEquals("Null quantity", 1, 1);
 
         System.out.println("automationPracticeTests has completed");
-        driver.close();
+
 
     }
 }
