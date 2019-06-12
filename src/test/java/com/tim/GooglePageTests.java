@@ -74,11 +74,9 @@ public class GooglePageTests {
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
         List<WebElement> searchResults = driver.findElements(By.partialLinkText("Selenium - Web Browser"));
         searchResults.get(0).click();
-        assertEquals("SeleniumHQ", 0, 0);
 
-        System.out.println("verifyGooglePage has completed");
-
-
+//      Assert using GET TEST
+        assertEquals("Selenium automates browsers",driver.findElement(By.xpath("//*[@id='mainContent']/p[1]/i")).getText());
     }
 
 
