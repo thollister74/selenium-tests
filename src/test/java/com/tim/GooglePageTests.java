@@ -108,7 +108,6 @@ public class GooglePageTests {
 //        //annotation and verification
        assertEquals("M0037", 1, 1); //Confirm NAIC matches ID entered at login
        System.out.println("loginToStatePortalUI has completed");
-
     }
 
 
@@ -141,9 +140,14 @@ public class GooglePageTests {
 //        8. Clear quantity and try alpha characters
         driver.findElement(By.id("quantity_wanted")).clear();
         driver.findElement(By.id("quantity_wanted")).sendKeys("abc");
-        assertEquals("Null quantity", 1, 1);
 
+//       Assert using get text and xpath,
+        assertEquals("100% cotton double printed dress. Black and white striped top and orange high waisted skater skirt bottom.",driver.findElement(By.xpath("//*[@id=\'short_description_content\']/p")).getText());
+
+//       Assert using get text and CSS Selection, failing
+        assertEquals("Null quantity",driver.findElement(By.cssSelector("#product > div.fancybox-overlay.fancybox-overlay-fixed > div > div > div > div > p")).getText());
         System.out.println("automationPracticeTests has completed");
+
 
 
     }
