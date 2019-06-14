@@ -181,8 +181,10 @@ public class GooglePageTests {
 //        8. Proceed through checkout steps
             driver.findElement(By.cssSelector("#layer_cart > div.clearfix > div.layer_cart_cart.col-xs-12.col-md-6 > div.button-container > a > span")).click();
             driver.findElement(By.cssSelector("#center_column > p.cart_navigation.clearfix > a.button.btn.btn-default.standard-checkout.button-medium > span")).click();
-            driver.findElement(By.id("SubmitCreate")).sendKeys("test@test.net");
             driver.findElement(By.id("email_create")).sendKeys("test@test.net");
+            driver.findElement(By.id("SubmitCreate")).click();
+            driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+
 
 //        Personal Information Screen
             driver.findElement(By.name("customer_firstname")).clear();
