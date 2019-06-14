@@ -55,7 +55,6 @@ public class GooglePageTests {
 
     @Test
     public void verifyGooglePage() throws InterruptedException {
-        System.out.println("Tim's first test");
         //Simple script to run a Google search
         //1. Open browser-moved to Before class
 
@@ -114,13 +113,13 @@ public class GooglePageTests {
     @Test
     public void automationPracticeTests() throws InterruptedException {
         //Testing using a sample site
-        //1. Open browser
+        //1. Open browser-moved to Before class
 
-//        2. Maximize browser window and go to google.com
+//        2. Go to google.com
         driver.get("http://automationpractice.com/index.php");
 
 //        3. Enter search criteria
-       driver.findElement(By.id("search_query_top")).sendKeys("summer");
+        driver.findElement(By.id("search_query_top")).sendKeys("summer");
 
 //        4. click Search button
         driver.findElement(By.name("submit_search")).click();
@@ -142,13 +141,65 @@ public class GooglePageTests {
         driver.findElement(By.id("quantity_wanted")).sendKeys("abc");
 
 //       Assert using get text and xpath,
-        assertEquals("100% cotton double printed dress. Black and white striped top and orange high waisted skater skirt bottom.",driver.findElement(By.xpath("//*[@id=\'short_description_content\']/p")).getText());
+        assertEquals("100% cotton double printed dress. Black and white striped top and orange high waisted skater skirt bottom.", driver.findElement(By.xpath("//*[@id=\'short_description_content\']/p")).getText());
 
 //       Assert using get text and CSS Selection, failing
-        assertEquals("Null quantity",driver.findElement(By.cssSelector("#product > div.fancybox-overlay.fancybox-overlay-fixed > div > div > div > div > p")).getText());
+       assertEquals("Null quantity",driver.findElement(By.cssSelector("#product > div.fancybox-overlay.fancybox-overlay-fixed > div > div > div > div > p")).getText());
         System.out.println("automationPracticeTests has completed");
+
+//      Assert using Select from a list
+        driver.findElement(By.xpath("//*[@id=\'group_1\']")).click();
+        System.out.println("Sample page test(s) complete");
+    }
+    @Test
+    public void automationPracticeCheckout()throws InterruptedException
+    {
+            //Testing using a sample site
+            //1. Open browser-moved to Before class
+
+//        2. Go to google.com
+            driver.get("http://automationpractice.com/index.php");
+
+//        3. Enter search criteria
+            driver.findElement(By.id("search_query_top")).sendKeys("faded");
+
+//        4. click Search button
+            driver.findElement(By.name("submit_search")).click();
+
+//        5. Click a link from search results
+            driver.findElement(By.partialLinkText("Faded Short Sleeve T-shirts")).click();
+
+//        6. Add a large number in Quantity field
+            driver.findElement(By.id("quantity_wanted")).clear();
+            driver.findElement(By.id("quantity_wanted")).sendKeys("1");
+            driver.findElement(By.name("Submit")).click();
+
+//       7. Confirm cost of order
+            assertEquals(16.51, (16.51 * 1), 0); //confirm amount matches expected
+            driver.findElement(By.xpath("//*[@id=\'layer_cart_product_price\']")).click();
+
+//        8. Proceed through checkout steps
+            driver.findElement(By.cssSelector("#layer_cart > div.clearfix > div.layer_cart_cart.col-xs-12.col-md-6 > div.button-container > a > span")).click();
+            driver.findElement(By.cssSelector("#center_column > p.cart_navigation.clearfix > a.button.btn.btn-default.standard-checkout.button-medium > span")).click();
+            driver.findElement(By.id("SubmitCreate")).sendKeys("test@test.net");
+            driver.findElement(By.id("email_create")).sendKeys("test@test.net");
+
+//        Personal Information Screen
+            driver.findElement(By.name("customer_firstname")).clear();
+            driver.findElement(By.name("customer_firstname")).sendKeys("Malcolm");
+            driver.findElement(By.name("customer_lastname")).clear();
+            driver.findElement(By.name("customer_lastname")).sendKeys("Reynolds");
+            driver.findElement(By.name("passwd")).clear();
+            driver.findElement(By.name("passwd")).sendKeys("12345");
+
+
+
+
+
+
+
+        }
 
 
 
     }
-}
