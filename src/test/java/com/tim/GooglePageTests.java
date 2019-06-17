@@ -11,6 +11,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.Select;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import static org.junit.Assert.assertEquals;
@@ -186,7 +187,8 @@ public class GooglePageTests {
             driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
 
-//        Personal Information Screen
+//        9. Name & Password
+            driver.findElement(By.xpath("//*[@id=\'id_gender1\']")).click();
             driver.findElement(By.name("customer_firstname")).clear();
             driver.findElement(By.name("customer_firstname")).sendKeys("Malcolm");
             driver.findElement(By.name("customer_lastname")).clear();
@@ -194,6 +196,28 @@ public class GooglePageTests {
             driver.findElement(By.name("passwd")).clear();
             driver.findElement(By.name("passwd")).sendKeys("12345");
 
+//         10. Address info
+            driver.findElement(By.cssSelector("#address1")).clear();
+            driver.findElement(By.cssSelector("#address1")).sendKeys("9121 Serenity Dr");
+            driver.findElement(By.cssSelector("#address2")).clear();
+            driver.findElement(By.cssSelector("#address2")).sendKeys("Suite 14");
+            driver.findElement(By.cssSelector("#city")).clear();
+            driver.findElement(By.cssSelector("#city")).sendKeys("Browncoat");
+
+//      Select State from a dropdown
+            Select stDropdown = new Select (driver.findElement(By.xpath("//*[@id=\'id_state\']")));
+            stDropdown.selectByVisibleText("Washington");
+            driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+
+//      complete form and click register
+            driver.findElement(By.cssSelector("#postcode")).clear();
+            driver.findElement(By.cssSelector("#postcode")).sendKeys("99258");
+            driver.findElement(By.cssSelector("#phone_mobile")).clear();
+            driver.findElement(By.cssSelector("#phone_mobile")).sendKeys("509.555.8574");
+            driver.findElement(By.cssSelector("#alias")).clear();
+            driver.findElement(By.cssSelector("#alias")).sendKeys("Business Address");
+            driver.findElement(By.cssSelector("#submitAccount")).click();
+           
 
 
 
