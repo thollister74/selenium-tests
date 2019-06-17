@@ -182,7 +182,7 @@ public class GooglePageTests {
 //        8. Proceed through checkout steps
             driver.findElement(By.cssSelector("#layer_cart > div.clearfix > div.layer_cart_cart.col-xs-12.col-md-6 > div.button-container > a > span")).click();
             driver.findElement(By.cssSelector("#center_column > p.cart_navigation.clearfix > a.button.btn.btn-default.standard-checkout.button-medium > span")).click();
-            driver.findElement(By.id("email_create")).sendKeys("test@test.net");
+            driver.findElement(By.id("email_create")).sendKeys("testing@testing.net");
             driver.findElement(By.id("SubmitCreate")).click();
             driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
@@ -209,7 +209,7 @@ public class GooglePageTests {
             stDropdown.selectByVisibleText("Washington");
             driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
 
-//      complete form and click register
+//      Complete form and submit
             driver.findElement(By.cssSelector("#postcode")).clear();
             driver.findElement(By.cssSelector("#postcode")).sendKeys("99258");
             driver.findElement(By.cssSelector("#phone_mobile")).clear();
@@ -217,7 +217,7 @@ public class GooglePageTests {
             driver.findElement(By.cssSelector("#alias")).clear();
             driver.findElement(By.cssSelector("#alias")).sendKeys("Business Address");
             driver.findElement(By.cssSelector("#submitAccount")).click();
-           
+            
 
 
 
