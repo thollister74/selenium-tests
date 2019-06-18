@@ -182,13 +182,12 @@ public class GooglePageTests {
 
 //        8. Proceed through checkout steps
             String testEmail = UUID.randomUUID().toString();
-            testEmail = testEmail.substring(0, Math.min(testEmail.length(),8));
+            testEmail = testEmail.substring(0, Math.min(testEmail.length(),8)); // ---truncating the email address but not sure how!--- //
             driver.findElement(By.cssSelector("#layer_cart > div.clearfix > div.layer_cart_cart.col-xs-12.col-md-6 > div.button-container > a > span")).click();
             driver.findElement(By.cssSelector("#center_column > p.cart_navigation.clearfix > a.button.btn.btn-default.standard-checkout.button-medium > span")).click();
             driver.findElement(By.id("email_create")).sendKeys(testEmail+"@testing.net");
-            Thread.sleep(10000);
+            Thread.sleep(15000); // slowing test to show off randomized email address
             driver.findElement(By.id("SubmitCreate")).click();
-            driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
 
 //        9. Name & Password
