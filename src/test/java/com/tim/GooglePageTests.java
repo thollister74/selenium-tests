@@ -13,6 +13,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.Select;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import static org.junit.Assert.assertEquals;
 
@@ -180,9 +181,12 @@ public class GooglePageTests {
             driver.findElement(By.xpath("//*[@id=\'layer_cart_product_price\']")).click();
 
 //        8. Proceed through checkout steps
+            String testEmail = UUID.randomUUID().toString();
+            testEmail = testEmail.substring(0, Math.min(testEmail.length(),8));
             driver.findElement(By.cssSelector("#layer_cart > div.clearfix > div.layer_cart_cart.col-xs-12.col-md-6 > div.button-container > a > span")).click();
             driver.findElement(By.cssSelector("#center_column > p.cart_navigation.clearfix > a.button.btn.btn-default.standard-checkout.button-medium > span")).click();
-            driver.findElement(By.id("email_create")).sendKeys("testing@testing.net");
+            driver.findElement(By.id("email_create")).sendKeys(testEmail+"@testing.net");
+            Thread.sleep(10000);
             driver.findElement(By.id("SubmitCreate")).click();
             driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
@@ -217,7 +221,7 @@ public class GooglePageTests {
             driver.findElement(By.cssSelector("#alias")).clear();
             driver.findElement(By.cssSelector("#alias")).sendKeys("Business Address");
             driver.findElement(By.cssSelector("#submitAccount")).click();
-            
+
 
 
 
