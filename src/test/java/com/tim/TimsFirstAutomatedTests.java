@@ -24,6 +24,12 @@ public class TimsFirstAutomatedTests {
 
     private static WebDriver driver;
 
+    //For now, keeping this element in test class, later we will move it to page object
+    private By postalCodeField = By.cssSelector("#postcode");
+    private By phoneNumberField = By.cssSelector("#phone_mobile");
+    private By aliasField = By.cssSelector("#alias");
+    private By submitButton = By.cssSelector("#submitAccount");
+
     @BeforeClass
     public static void beforeClassSetup() {
         System.setProperty("webdriver.chrome.driver", "C:\\lib\\chromedriver.exe");
@@ -74,17 +80,19 @@ public class TimsFirstAutomatedTests {
 //       7. Confirm cost of order
         driver.findElement(By.partialLinkText("Proceed to checkout")).click();
 
+ //     ****** Should I use BigDecimal instead of double? ******
         String numberOfItemsInCart = driver.findElement(By.cssSelector("#summary_products_quantity")).getText().replace(" Products","");
         assertEquals("Expected x but found y items in cart",(0+Integer.valueOf(numberOfItemsInCart)),999);
         System.out.println("There are "+ numberOfItemsInCart +" items in the cart.");
-        System.out.println("Expected is: " +(999 * Double.valueOf(costPerItem)));
+        System.out.println("Expected is: " +(999 * Float.valueOf(costPerItem)));
+
 
         String totalCostBeforeShipping = driver.findElement(By.id("total_product")).getText().replace("$", "").replace(",","");
         System.out.println("Variable 'totalCostBeforeShipping' value is: " + totalCostBeforeShipping);
-        assertEquals("Actual and Expected Total costs don't match", (999 * Double.valueOf(costPerItem)), totalCostBeforeShipping); //confirm amount matches expected
-
-
+        String expectedTotal = formatDecimalsForCurrency(999 * Float.valueOf(costPerItem));
+        assertEquals("Actual and Expected Total costs don't match", expectedTotal, totalCostBeforeShipping); //confirm amount matches expected
     }
+
 
 
     @Test
@@ -141,21 +149,31 @@ public class TimsFirstAutomatedTests {
         driver.findElement(By.cssSelector("#city")).sendKeys("Browncoat");
 
 //      Select State from a dropdown
-        Select stDropdown = new Select(driver.findElement(By.xpath("//*[@id=\'id_state\']")));
-        stDropdown.selectByVisibleText("Washington");
-        driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+        selectWebElement(By.xpath("//*[@id=\'id_state\']"),"Washington");
 
 //      Complete form and submit
-        driver.findElement(By.cssSelector("#postcode")).clear();
-        driver.findElement(By.cssSelector("#postcode")).sendKeys("99258");
-        driver.findElement(By.cssSelector("#phone_mobile")).clear();
-        driver.findElement(By.cssSelector("#phone_mobile")).sendKeys("509.555.8574");
-        driver.findElement(By.cssSelector("#alias")).clear();
-        driver.findElement(By.cssSelector("#alias")).sendKeys("Business Address");
-        driver.findElement(By.cssSelector("#submitAccount")).click();
-
-
+        driver.findElement(postalCodeField).clear();
+        driver.findElement(postalCodeField).sendKeys("99258");
+        clearAndSendKeys(phoneNumberField, "509.555.8574");
+        clearAndSendKeys(aliasField, "Business Address");
+        driver.findElement(submitButton).click();
     }
 
 
+    private String formatDecimalsForCurrency(float amtToBeFormatted){
+        DecimalFormat df = new DecimalFormat("#.00");
+        df.setMaximumFractionDigits(2);
+        return df.format(amtToBeFormatted);
+    }
+
+    private void selectWebElement(By by, String elementToSelect){
+        Select dropdown = new Select(driver.findElement(by));
+        dropdown.selectByVisibleText(elementToSelect);
+    }
+
+    private void clearAndSendKeys(By by,String value){
+        driver.findElement(by).clear();
+        driver.findElement(by).sendKeys(value);
+
+    }
 }
