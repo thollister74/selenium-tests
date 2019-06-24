@@ -1,18 +1,15 @@
 package com.tim;
 
 
-import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.Select;
-
-import java.util.List;
+import java.text.DecimalFormat;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -66,7 +63,8 @@ public class TimsFirstAutomatedTests {
 
 //        5. Click a link from search results
         driver.findElement(By.partialLinkText("Printed Dress")).click();
-        String costPerItem = driver.findElement(By.className("ajax_block_products_total")).getText().replace("$", "");
+        String costPerItem = driver.findElement(By.id("our_price_display")).getText().replace("$", "");
+        System.out.println("Variable 'costPerItem' value is: " + costPerItem);
 
 //        6. Add a large number in Quantity field
         driver.findElement(By.id("quantity_wanted")).clear();
@@ -74,9 +72,23 @@ public class TimsFirstAutomatedTests {
         driver.findElement(By.name("Submit")).click();
 
 //       7. Confirm cost of order
-        String actualAmount = driver.findElement(By.id("layer_cart_product_price")).getText().replace("$", "");
-        assertEquals("Total amount does not match", (999 * Double.valueOf(costPerItem)), actualAmount); //confirm amount matches expected
+        driver.findElement(By.partialLinkText("Proceed to checkout")).click();
+
+        String numberOfItemsInCart = driver.findElement(By.cssSelector("#summary_products_quantity")).getText().replace(" Products","");
+        assertEquals("Expected x but found y items in cart",(0+Integer.valueOf(numberOfItemsInCart)),999);
+        System.out.println("There are "+ numberOfItemsInCart +" items in the cart.");
+
+
+        String totalCostBeforeShipping = driver.findElement(By.id("total_product")).getText().replace("$", "").replace(",","");
+        System.out.println("Variable 'totalCostBeforeShipping' value is: " + totalCostBeforeShipping);
+        assertEquals("Actual and Expected Total costs don't match", (999 * Double.valueOf(costPerItem)), totalCostBeforeShipping); //confirm amount matches expected
+
+//         8. Confirm number of items in cart
+//        String numberOfItemsInCart = driver.findElement(By.cssSelector("#summary_products_quantity")).getText().replace(" Products","");
+//        assertEquals("Expected x but found y items in cart",numberOfItemsInCart,1);
+//        System.out.println("There are "+ numberOfItemsInCart +" items in the cart.");
     }
+
 
     @Test
     public void automationPracticeCheckout() throws InterruptedException {
