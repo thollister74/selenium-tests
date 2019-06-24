@@ -62,7 +62,7 @@ public class TimsFirstAutomatedTests {
         driver.findElement(By.name("submit_search")).click();
 
 //        5. Click a link from search results
-        driver.findElement(By.partialLinkText("Printed Dress")).click();
+        driver.findElement(By.partialLinkText("Printed Chiffon Dress")).click();
         String costPerItem = driver.findElement(By.id("our_price_display")).getText().replace("$", "");
         System.out.println("Variable 'costPerItem' value is: " + costPerItem);
 
@@ -77,16 +77,13 @@ public class TimsFirstAutomatedTests {
         String numberOfItemsInCart = driver.findElement(By.cssSelector("#summary_products_quantity")).getText().replace(" Products","");
         assertEquals("Expected x but found y items in cart",(0+Integer.valueOf(numberOfItemsInCart)),999);
         System.out.println("There are "+ numberOfItemsInCart +" items in the cart.");
-
+        System.out.println("Expected is: " +(999 * Double.valueOf(costPerItem)));
 
         String totalCostBeforeShipping = driver.findElement(By.id("total_product")).getText().replace("$", "").replace(",","");
         System.out.println("Variable 'totalCostBeforeShipping' value is: " + totalCostBeforeShipping);
         assertEquals("Actual and Expected Total costs don't match", (999 * Double.valueOf(costPerItem)), totalCostBeforeShipping); //confirm amount matches expected
 
-//         8. Confirm number of items in cart
-//        String numberOfItemsInCart = driver.findElement(By.cssSelector("#summary_products_quantity")).getText().replace(" Products","");
-//        assertEquals("Expected x but found y items in cart",numberOfItemsInCart,1);
-//        System.out.println("There are "+ numberOfItemsInCart +" items in the cart.");
+
     }
 
 
