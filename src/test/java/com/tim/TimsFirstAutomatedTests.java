@@ -24,11 +24,34 @@ public class TimsFirstAutomatedTests {
 
     private static WebDriver driver;
 
+    private String formatDecimalsForCurrency(float amtToBeFormatted){
+        DecimalFormat df = new DecimalFormat("#.00");
+        df.setMaximumFractionDigits(2);
+        return df.format(amtToBeFormatted);
+    }
+
+    private void selectWebElement(By by, String elementToSelect){
+        Select dropdown = new Select(driver.findElement(by));
+        dropdown.selectByVisibleText(elementToSelect);
+    }
+
+    private void clearAndSendKeys(By by,String value){
+        driver.findElement(by).clear();
+        driver.findElement(by).sendKeys(value);
+    }
+
     //For now, keeping this element in test class, later we will move it to page object
     private By postalCodeField = By.cssSelector("#postcode");
     private By phoneNumberField = By.cssSelector("#phone_mobile");
     private By aliasField = By.cssSelector("#alias");
     private By submitButton = By.cssSelector("#submitAccount");
+    private By address1 = By.cssSelector("#address1");
+    private By address2 = By.cssSelector("#address2");
+    private By city = By.cssSelector("#city");
+    private By quantity_wanted = By.id("quantity_wanted");
+    private By customer_firstname = By.name("customer_firstname");
+    private By customer_lastname = By.name("customer_lastname");
+    private By setPassword = By.name("passwd");
 
     @BeforeClass
     public static void beforeClassSetup() {
@@ -73,8 +96,7 @@ public class TimsFirstAutomatedTests {
         System.out.println("Variable 'costPerItem' value is: " + costPerItem);
 
 //        6. Add a large number in Quantity field
-        driver.findElement(By.id("quantity_wanted")).clear();
-        driver.findElement(By.id("quantity_wanted")).sendKeys("999");
+        clearAndSendKeys(quantity_wanted,"999");
         driver.findElement(By.name("Submit")).click();
 
 //       7. Confirm cost of order
@@ -113,8 +135,7 @@ public class TimsFirstAutomatedTests {
         driver.findElement(By.partialLinkText("Faded Short Sleeve T-shirts")).click();
 
 //        6. Add a large number in Quantity field
-        driver.findElement(By.id("quantity_wanted")).clear();
-        driver.findElement(By.id("quantity_wanted")).sendKeys("1");
+        clearAndSendKeys(quantity_wanted,"1");
         driver.findElement(By.name("Submit")).click();
 
 //       7. Confirm cost of order
@@ -123,57 +144,35 @@ public class TimsFirstAutomatedTests {
 
 //        8. Proceed through checkout steps
         String testEmail = UUID.randomUUID().toString();
-        testEmail = testEmail.substring(0, Math.min(testEmail.length(), 8)); // ---truncating the email address but not sure how!--- //
+        testEmail = testEmail.substring(0, Math.min(testEmail.length(), 10)); // ---truncating the email address but not sure how!--- //
         driver.findElement(By.cssSelector("#layer_cart > div.clearfix > div.layer_cart_cart.col-xs-12.col-md-6 > div.button-container > a > span")).click();
         driver.findElement(By.cssSelector("#center_column > p.cart_navigation.clearfix > a.button.btn.btn-default.standard-checkout.button-medium > span")).click();
         driver.findElement(By.id("email_create")).sendKeys(testEmail + "@testing.net");
-        Thread.sleep(15000); // slowing test to show off randomized email address
         driver.findElement(By.id("SubmitCreate")).click();
 
 
 //        9. Name & Password
         driver.findElement(By.xpath("//*[@id=\'id_gender1\']")).click();
-        driver.findElement(By.name("customer_firstname")).clear();
-        driver.findElement(By.name("customer_firstname")).sendKeys("Malcolm");
-        driver.findElement(By.name("customer_lastname")).clear();
-        driver.findElement(By.name("customer_lastname")).sendKeys("Reynolds");
-        driver.findElement(By.name("passwd")).clear();
-        driver.findElement(By.name("passwd")).sendKeys("12345");
+        clearAndSendKeys(customer_firstname,"Malcolm");
+        clearAndSendKeys(customer_lastname,"Reynolds");
+        clearAndSendKeys(setPassword,"12345");
 
 //         10. Address info
-        driver.findElement(By.cssSelector("#address1")).clear();
-        driver.findElement(By.cssSelector("#address1")).sendKeys("9121 Serenity Dr");
-        driver.findElement(By.cssSelector("#address2")).clear();
-        driver.findElement(By.cssSelector("#address2")).sendKeys("Suite 14");
-        driver.findElement(By.cssSelector("#city")).clear();
-        driver.findElement(By.cssSelector("#city")).sendKeys("Browncoat");
+        clearAndSendKeys(address1,"9121 Serenity Dr");
+        clearAndSendKeys(address2,"Suite 14");
+        clearAndSendKeys(city,"Browncoat");
 
 //      Select State from a dropdown
         selectWebElement(By.xpath("//*[@id=\'id_state\']"),"Washington");
 
 //      Complete form and submit
-        driver.findElement(postalCodeField).clear();
-        driver.findElement(postalCodeField).sendKeys("99258");
+
+        clearAndSendKeys(postalCodeField,"99258");
         clearAndSendKeys(phoneNumberField, "509.555.8574");
         clearAndSendKeys(aliasField, "Business Address");
         driver.findElement(submitButton).click();
     }
 
 
-    private String formatDecimalsForCurrency(float amtToBeFormatted){
-        DecimalFormat df = new DecimalFormat("#.00");
-        df.setMaximumFractionDigits(2);
-        return df.format(amtToBeFormatted);
-    }
 
-    private void selectWebElement(By by, String elementToSelect){
-        Select dropdown = new Select(driver.findElement(by));
-        dropdown.selectByVisibleText(elementToSelect);
-    }
-
-    private void clearAndSendKeys(By by,String value){
-        driver.findElement(by).clear();
-        driver.findElement(by).sendKeys(value);
-
-    }
 }
