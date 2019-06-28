@@ -14,13 +14,15 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 
-/**
+/**d
  * Created by hollisti on 2019-05-24.
  */
 
-public class TimsFirstAutomatedTests {
+public class TimsAutomatedTests {
 
     private static WebDriver driver;
 
@@ -35,7 +37,7 @@ public class TimsFirstAutomatedTests {
         dropdown.selectByVisibleText(elementToSelect);
     }
 
-    private void clearAndSendKeys(By by,String value){
+    private void clearFieldAndSendTextToField(By by, String value){
         driver.findElement(by).clear();
         driver.findElement(by).sendKeys(value);
     }
@@ -52,6 +54,13 @@ public class TimsFirstAutomatedTests {
     private By customer_firstname = By.name("customer_firstname");
     private By customer_lastname = By.name("customer_lastname");
     private By setPassword = By.name("passwd");
+    private By searchTextField = By.id ("search_query_top");
+    private By emailTextField = By.id("email_create");
+    private By checkboxOnAddressConfirmation = By.id("addressesAreEquals");
+    private boolean isChecked;
+    private By agreeToTermsOfServiceCheckbox = By.id("cgv");
+
+
 
     @BeforeClass
     public static void beforeClassSetup() {
@@ -70,22 +79,18 @@ public class TimsFirstAutomatedTests {
 
     @Before
     public void beforeTestSetup() {
-
         driver.get("http://automationpractice.com/index.php");
     }
-
 
     @Test
     public void productQuantityFieldValidations() throws InterruptedException {
         //Testing using a sample site
         //1. Open browser-moved to Before class
 //      #---Moved to Before Class---#
-
-//        2. Go to google.com
+//        2. Go to website
 //      #---Moved to Before Class---#
-
 //        3. Enter search criteria
-        driver.findElement(By.id("search_query_top")).sendKeys("summer");
+        clearFieldAndSendTextToField(searchTextField,"summer");
 
 //        4. click Search button
         driver.findElement(By.name("submit_search")).click();
@@ -96,7 +101,7 @@ public class TimsFirstAutomatedTests {
         System.out.println("Variable 'costPerItem' value is: " + costPerItem);
 
 //        6. Add a large number in Quantity field
-        clearAndSendKeys(quantity_wanted,"999");
+        clearFieldAndSendTextToField(quantity_wanted,"999");
         driver.findElement(By.name("Submit")).click();
 
 //       7. Confirm cost of order
@@ -113,9 +118,8 @@ public class TimsFirstAutomatedTests {
         System.out.println("Variable 'totalCostBeforeShipping' value is: " + totalCostBeforeShipping);
         String expectedTotal = formatDecimalsForCurrency(999 * Float.valueOf(costPerItem));
         assertEquals("Actual and Expected Total costs don't match", expectedTotal, totalCostBeforeShipping); //confirm amount matches expected
+
     }
-
-
 
     @Test
     public void automationPracticeCheckout() throws InterruptedException {
@@ -123,10 +127,10 @@ public class TimsFirstAutomatedTests {
         //1. Open browser-moved to Before class
 
 //        2. Go to google.com
-        driver.get("http://automationpractice.com/index.php");
+//        driver.get("http://automationpractice.com/index.php");
 
 //        3. Enter search criteria
-        driver.findElement(By.id("search_query_top")).sendKeys("faded");
+        clearFieldAndSendTextToField(searchTextField,"faded");
 
 //        4. click Search button
         driver.findElement(By.name("submit_search")).click();
@@ -135,44 +139,48 @@ public class TimsFirstAutomatedTests {
         driver.findElement(By.partialLinkText("Faded Short Sleeve T-shirts")).click();
 
 //        6. Add a large number in Quantity field
-        clearAndSendKeys(quantity_wanted,"1");
+        clearFieldAndSendTextToField(quantity_wanted,"1");
         driver.findElement(By.name("Submit")).click();
 
 //       7. Confirm cost of order
         assertEquals(16.51, (16.51 * 1), 0); //confirm amount matches expected
-        driver.findElement(By.xpath("//*[@id=\'layer_cart_product_price\']")).click();
+        driver.findElement(By.xpath("//*[@id=\'layer_cart_product_price\']")).click();//add to cart button
 
 //        8. Proceed through checkout steps
         String testEmail = UUID.randomUUID().toString();
         testEmail = testEmail.substring(0, Math.min(testEmail.length(), 10)); // ---truncating the email address but not sure how!--- //
-        driver.findElement(By.cssSelector("#layer_cart > div.clearfix > div.layer_cart_cart.col-xs-12.col-md-6 > div.button-container > a > span")).click();
-        driver.findElement(By.cssSelector("#center_column > p.cart_navigation.clearfix > a.button.btn.btn-default.standard-checkout.button-medium > span")).click();
-        driver.findElement(By.id("email_create")).sendKeys(testEmail + "@testing.net");
+        driver.findElement(By.cssSelector("#layer_cart > div.clearfix > div.layer_cart_cart.col-xs-12.col-md-6 > div.button-container > a > span")).click();//Proceed to Checkout button on modal
+        driver.findElement(By.cssSelector("#center_column > p.cart_navigation.clearfix > a.button.btn.btn-default.standard-checkout.button-medium > span")).click(); //proceed to checkout button on Cart Summary page
+        clearFieldAndSendTextToField(emailTextField,testEmail + "@testing.net");
         driver.findElement(By.id("SubmitCreate")).click();
 
 
 //        9. Name & Password
-        driver.findElement(By.xpath("//*[@id=\'id_gender1\']")).click();
-        clearAndSendKeys(customer_firstname,"Malcolm");
-        clearAndSendKeys(customer_lastname,"Reynolds");
-        clearAndSendKeys(setPassword,"12345");
+        driver.findElement(By.id("id_gender1")).click();
+        clearFieldAndSendTextToField(customer_firstname,"Malcolm");
+        clearFieldAndSendTextToField(customer_lastname,"Reynolds");
+        clearFieldAndSendTextToField(setPassword,"12345");
 
 //         10. Address info
-        clearAndSendKeys(address1,"9121 Serenity Dr");
-        clearAndSendKeys(address2,"Suite 14");
-        clearAndSendKeys(city,"Browncoat");
+        clearFieldAndSendTextToField(address1,"9121 Serenity Dr");
+        clearFieldAndSendTextToField(address2,"Suite 14");
+        clearFieldAndSendTextToField(city,"Browncoat");
 
 //      Select State from a dropdown
-        selectWebElement(By.xpath("//*[@id=\'id_state\']"),"Washington");
+        selectWebElement(By.id("id_state"),"Washington");
 
 //      Complete form and submit
 
-        clearAndSendKeys(postalCodeField,"99258");
-        clearAndSendKeys(phoneNumberField, "509.555.8574");
-        clearAndSendKeys(aliasField, "Business Address");
+        clearFieldAndSendTextToField(postalCodeField,"99258");
+        clearFieldAndSendTextToField(phoneNumberField, "509.555.8574");
+        clearFieldAndSendTextToField(aliasField, "Business Address");
         driver.findElement(submitButton).click();
+
+        //Address Page
+        assertTrue(isChecked = driver.findElement(checkboxOnAddressConfirmation).isSelected());
+        driver.findElement(By.name("processAddress")).click();
+
+        //Shipping info page
+        isChecked = driver.findElement(agreeToTermsOfServiceCheckbox).isSelected();
     }
-
-
-
 }
