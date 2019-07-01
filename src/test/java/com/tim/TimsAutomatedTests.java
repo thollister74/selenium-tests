@@ -7,14 +7,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.Select;
 import java.text.DecimalFormat;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 
@@ -59,8 +58,10 @@ public class TimsAutomatedTests {
     private By checkboxOnAddressConfirmation = By.id("addressesAreEquals");
     private boolean isChecked;
     private By agreeToTermsOfServiceCheckbox = By.id("cgv");
+    private By checkForSuccessText = By.cssSelector(".alert-success");
+    private By clickSummerDressImage = By.cssSelector("#center_column > ul > li:nth-child(1) > div > div.left-block > div > a.product_img_link > img");
 
-
+//
 
     @BeforeClass
     public static void beforeClassSetup() {
@@ -73,7 +74,7 @@ public class TimsAutomatedTests {
 
     @AfterClass
     public static void afterClassCleanup() {
-        System.out.println("Clean up steps held in 'afterClass'");
+        System.out.println("Action listed in 'afterClass' have been completed");
         driver.close();
     }
 
@@ -118,7 +119,6 @@ public class TimsAutomatedTests {
         System.out.println("Variable 'totalCostBeforeShipping' value is: " + totalCostBeforeShipping);
         String expectedTotal = formatDecimalsForCurrency(999 * Float.valueOf(costPerItem));
         assertEquals("Actual and Expected Total costs don't match", expectedTotal, totalCostBeforeShipping); //confirm amount matches expected
-
     }
 
     @Test
@@ -130,7 +130,7 @@ public class TimsAutomatedTests {
 //        driver.get("http://automationpractice.com/index.php");
 
 //        3. Enter search criteria
-        clearFieldAndSendTextToField(searchTextField,"faded");
+        clearFieldAndSendTextToField(searchTextField, "faded");
 
 //        4. click Search button
         driver.findElement(By.name("submit_search")).click();
@@ -139,7 +139,7 @@ public class TimsAutomatedTests {
         driver.findElement(By.partialLinkText("Faded Short Sleeve T-shirts")).click();
 
 //        6. Add a large number in Quantity field
-        clearFieldAndSendTextToField(quantity_wanted,"1");
+        clearFieldAndSendTextToField(quantity_wanted, "1");
         driver.findElement(By.name("Submit")).click();
 
 //       7. Confirm cost of order
@@ -148,30 +148,33 @@ public class TimsAutomatedTests {
 
 //        8. Proceed through checkout steps
         String testEmail = UUID.randomUUID().toString();
-        testEmail = testEmail.substring(0, Math.min(testEmail.length(), 10)); // ---truncating the email address but not sure how!--- //
+        testEmail = testEmail.substring(0, Math.min(testEmail.length(), 8)); // ---truncating the email address but not sure how!--- //
         driver.findElement(By.cssSelector("#layer_cart > div.clearfix > div.layer_cart_cart.col-xs-12.col-md-6 > div.button-container > a > span")).click();//Proceed to Checkout button on modal
         driver.findElement(By.cssSelector("#center_column > p.cart_navigation.clearfix > a.button.btn.btn-default.standard-checkout.button-medium > span")).click(); //proceed to checkout button on Cart Summary page
-        clearFieldAndSendTextToField(emailTextField,testEmail + "@testing.net");
+        clearFieldAndSendTextToField(emailTextField, testEmail + "@testing.net");
+        System.out.println("Test email is: " +testEmail + "@testing.net");
         driver.findElement(By.id("SubmitCreate")).click();
-
 
 //        9. Name & Password
         driver.findElement(By.id("id_gender1")).click();
-        clearFieldAndSendTextToField(customer_firstname,"Malcolm");
-        clearFieldAndSendTextToField(customer_lastname,"Reynolds");
-        clearFieldAndSendTextToField(setPassword,"12345");
+        clearFieldAndSendTextToField(customer_firstname, "Malcolm");
+        clearFieldAndSendTextToField(customer_lastname, "Reynolds");
+        String createPassword = UUID.randomUUID().toString();
+        createPassword = createPassword.substring(0,Math.min(createPassword.length(),8));
+        clearFieldAndSendTextToField(setPassword, createPassword);
+        System.out.println("Test password is: " +createPassword);
 
 //         10. Address info
-        clearFieldAndSendTextToField(address1,"9121 Serenity Dr");
-        clearFieldAndSendTextToField(address2,"Suite 14");
-        clearFieldAndSendTextToField(city,"Browncoat");
+        clearFieldAndSendTextToField(address1, "9121 Serenity Dr");
+        clearFieldAndSendTextToField(address2, "Suite 14");
+        clearFieldAndSendTextToField(city, "Browncoat");
 
 //      Select State from a dropdown
-        selectWebElement(By.id("id_state"),"Washington");
+        selectWebElement(By.id("id_state"), "Washington");
 
 //      Complete form and submit
 
-        clearFieldAndSendTextToField(postalCodeField,"99258");
+        clearFieldAndSendTextToField(postalCodeField, "99258");
         clearFieldAndSendTextToField(phoneNumberField, "509.555.8574");
         clearFieldAndSendTextToField(aliasField, "Business Address");
         driver.findElement(submitButton).click();
@@ -182,5 +185,26 @@ public class TimsAutomatedTests {
 
         //Shipping info page
         isChecked = driver.findElement(agreeToTermsOfServiceCheckbox).isSelected();
+        driver.findElement(agreeToTermsOfServiceCheckbox).click();
+        driver.findElement(By.name("processCarrier")).click();
+        driver.findElement(By.className("cheque")).click();//Payment Method
+        driver.findElement(By.cssSelector("#cart_navigation > button > span")).click();
+        String saleConfirmation = checkForSuccessText.toString();
+        assertEquals("Did not find expected 'Success' text", "Your order on My Store is complete.",driver.findElement(checkForSuccessText).getText() );
+    }
+
+    @Test
+    public void editShoppingCartContentsAndConfirmCartUpdatesCorrectly ()throws InterruptedException{
+       clearFieldAndSendTextToField(searchTextField,"printed summer dress");
+       WebElement clickButtonToRunSearch = driver.findElement(By.name("submit_search"));
+       clickButtonToRunSearch.click();
+       WebElement clickDressToSeeDetails = driver.findElement(By.cssSelector(("#center_column > ul > li.ajax_block_product.col-xs-12.col-sm-6.col-md-4.first-in-line.last-line.first-item-of-tablet-line.first-item-of-mobile-line.last-mobile-line.hovered > div > div.left-block > div > a.product_img_link > img"))) ;
+       clickDressToSeeDetails.click();
+       WebElement addToCartButton = driver.findElement(By.name("Submit");
+       addToCartButton.click();
+       WebElement dialogCloseButton = driver.findElement(By.className(".cross"));
+       Thread.sleep(5000);
+       assertEquals("Did not find expected number of items in cart", 1,driver.findElement(checkForSuccessText).getText() );
+
     }
 }
