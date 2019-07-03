@@ -59,7 +59,8 @@ public class TimsAutomatedTests {
     private boolean isChecked;
     private By agreeToTermsOfServiceCheckbox = By.id("cgv");
     private By checkForSuccessText = By.cssSelector(".alert-success");
-    private By clickSummerDressImage = By.cssSelector("#center_column > ul > li:nth-child(1) > div > div.left-block > div > a.product_img_link > img");
+    private By totalItemsInShoppingCart = By.id("summary_products_quantity");
+
 
 //
 
@@ -195,16 +196,16 @@ public class TimsAutomatedTests {
 
     @Test
     public void editShoppingCartContentsAndConfirmCartUpdatesCorrectly ()throws InterruptedException{
-       clearFieldAndSendTextToField(searchTextField,"printed summer dress");
-       WebElement clickButtonToRunSearch = driver.findElement(By.name("submit_search"));
-       clickButtonToRunSearch.click();
-       WebElement clickDressToSeeDetails = driver.findElement(By.cssSelector(("#center_column > ul > li.ajax_block_product.col-xs-12.col-sm-6.col-md-4.first-in-line.last-line.first-item-of-tablet-line.first-item-of-mobile-line.last-mobile-line.hovered > div > div.left-block > div > a.product_img_link > img"))) ;
-       clickDressToSeeDetails.click();
-       WebElement addToCartButton = driver.findElement(By.name("Submit");
-       addToCartButton.click();
-       WebElement dialogCloseButton = driver.findElement(By.className(".cross"));
-       Thread.sleep(5000);
-       assertEquals("Did not find expected number of items in cart", 1,driver.findElement(checkForSuccessText).getText() );
+//        3. Enter search criteria
+        clearFieldAndSendTextToField(searchTextField, "printed summer dress");
+        driver.findElement(By.name("submit_search")).click();
+
+        driver.findElement(By.partialLinkText("Faded Short Sleeve T-shirts")).click();
+
+        clearFieldAndSendTextToField(quantity_wanted, "2");
+        driver.findElement(By.name("Submit")).click();
+        
+        Thread.sleep(20000);
 
     }
 }
