@@ -60,9 +60,8 @@ public class TimsAutomatedTests {
     private By agreeToTermsOfServiceCheckbox = By.id("cgv");
     private By checkForSuccessText = By.cssSelector(".alert-success");
     private By totalItemsInShoppingCart = By.id("summary_products_quantity");
-
-
-//
+    private By modalProceedToCheckoutButton = By.partialLinkText("Proceed to checkout");
+    private By checkNumberOfItemsInCart = By.cssSelector(("#layer_cart > div.clearfix > div.layer_cart_cart.col-xs-12.col-md-6 > h2 > span.ajax_cart_product_txt_s > span"));
 
     @BeforeClass
     public static void beforeClassSetup() {
@@ -204,7 +203,13 @@ public class TimsAutomatedTests {
 
         clearFieldAndSendTextToField(quantity_wanted, "2");
         driver.findElement(By.name("Submit")).click();
-        
+        String confirmNumberOfItemsInCart = checkNumberOfItemsInCart.toString();
+        assertEquals("Did not find the expected number of items in the cart", "2", driver.findElement(checkNumberOfItemsInCart).getText());
+
+
+        WebElement modalProceedToCheckoutButton = driver.findElement(By.partialLinkText("Proceed to checkout"));
+        modalProceedToCheckoutButton.click();
+
         Thread.sleep(20000);
 
     }
