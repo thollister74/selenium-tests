@@ -1,6 +1,6 @@
 package com.tim;
 
-
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -9,6 +9,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.Select;
 import java.text.DecimalFormat;
 import java.util.UUID;
@@ -61,7 +62,8 @@ public class TimsAutomatedTests {
     private By checkForSuccessText = By.cssSelector(".alert-success");
     private By totalItemsInShoppingCart = By.id("summary_products_quantity");
     private By modalProceedToCheckoutButton = By.partialLinkText("Proceed to checkout");
-    private By checkNumberOfItemsInCart = By.cssSelector(("#layer_cart > div.clearfix > div.layer_cart_cart.col-xs-12.col-md-6 > h2 > span.ajax_cart_product_txt_s > span"));
+    private By checkNumberOfItemsInCart = By.id(("summary_products_quantity"));
+
 
     @BeforeClass
     public static void beforeClassSetup() {
@@ -83,10 +85,17 @@ public class TimsAutomatedTests {
         driver.get("http://automationpractice.com/index.php");
     }
 
+    @After
+    public void afterTestCleanup(){
+    Actions actions = new Actions(driver);
+        actions.moveToElement(driver.findElement(By.className("shopping_cart")));
+    driver.findElement(By.cssSelector("#header > div:nth-child(3) > div > div > div:nth-child(3) > div > div > div > div > dl > dt > span > a")).click();
+    }
+
     @Test
     public void productQuantityFieldValidations() throws InterruptedException {
-        //Testing using a sample site
-        //1. Open browser-moved to Before class
+//      Testing using a sample site
+//        1. Open browser-moved to Before class
 //      #---Moved to Before Class---#
 //        2. Go to website
 //      #---Moved to Before Class---#
@@ -114,11 +123,11 @@ public class TimsAutomatedTests {
         System.out.println("There are "+ numberOfItemsInCart +" items in the cart.");
         System.out.println("Expected is: " +(999 * Float.valueOf(costPerItem)));
 
-
         String totalCostBeforeShipping = driver.findElement(By.id("total_product")).getText().replace("$", "").replace(",","");
         System.out.println("Variable 'totalCostBeforeShipping' value is: " + totalCostBeforeShipping);
         String expectedTotal = formatDecimalsForCurrency(999 * Float.valueOf(costPerItem));
         assertEquals("Actual and Expected Total costs don't match", expectedTotal, totalCostBeforeShipping); //confirm amount matches expected
+        Thread.sleep(9000);
     }
 
     @Test
@@ -190,7 +199,7 @@ public class TimsAutomatedTests {
         driver.findElement(By.className("cheque")).click();//Payment Method
         driver.findElement(By.cssSelector("#cart_navigation > button > span")).click();
         String saleConfirmation = checkForSuccessText.toString();
-        assertEquals("Did not find expected 'Success' text", "Your order on My Store is complete.",driver.findElement(checkForSuccessText).getText() );
+        assertEquals("Did not find expected 'Success' text", "Your order on My Store is complete.",driver.findElement(checkForSuccessText).getText());
     }
 
     @Test
@@ -198,19 +207,19 @@ public class TimsAutomatedTests {
 //        3. Enter search criteria
         clearFieldAndSendTextToField(searchTextField, "printed summer dress");
         driver.findElement(By.name("submit_search")).click();
-
         driver.findElement(By.partialLinkText("Faded Short Sleeve T-shirts")).click();
 
         clearFieldAndSendTextToField(quantity_wanted, "2");
         driver.findElement(By.name("Submit")).click();
+        Thread.sleep(2000);
+        driver.findElement(By.partialLinkText("Proceed to checkout")).click();
         String confirmNumberOfItemsInCart = checkNumberOfItemsInCart.toString();
-        assertEquals("Did not find the expected number of items in the cart", "2", driver.findElement(checkNumberOfItemsInCart).getText());
-
+        assertEquals("Actual number of items didn't match expected","2 Products",driver.findElement(checkNumberOfItemsInCart).getText());
 
         WebElement modalProceedToCheckoutButton = driver.findElement(By.partialLinkText("Proceed to checkout"));
         modalProceedToCheckoutButton.click();
 
-        Thread.sleep(20000);
+        Thread.sleep(2000);
 
     }
 }
