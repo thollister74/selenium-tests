@@ -87,9 +87,9 @@ public class TimsAutomatedTests {
 
     @After
     public void afterTestCleanup(){
-    Actions actions = new Actions(driver);
-        actions.moveToElement(driver.findElement(By.className("shopping_cart")));
-    driver.findElement(By.cssSelector("#header > div:nth-child(3) > div > div > div:nth-child(3) > div > div > div > div > dl > dt > span > a")).click();
+        Actions actions = new Actions(driver);
+        actions.moveToElement(driver.findElement(By.cssSelector(".shopping_cart .ajax_cart_quantity"))).perform();
+        driver.findElement(By.className("ajax_cart_block_remove_link")).click();
     }
 
     @Test
