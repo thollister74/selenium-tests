@@ -17,7 +17,6 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-
 /**d
  * Created by hollisti on 2019-05-24.
  */
@@ -60,10 +59,9 @@ public class TimsAutomatedTests {
     private boolean isChecked;
     private By agreeToTermsOfServiceCheckbox = By.id("cgv");
     private By checkForSuccessText = By.cssSelector(".alert-success");
-    private By totalItemsInShoppingCart = By.id("summary_products_quantity");
     private By modalProceedToCheckoutButton = By.partialLinkText("Proceed to checkout");
     private By checkNumberOfItemsInCart = By.id(("summary_products_quantity"));
-
+    private By checkOutScreenQuantityTextField = By.className("#cart_quantity_input #form-control grey");
 
     @BeforeClass
     public static void beforeClassSetup() {
@@ -127,8 +125,7 @@ public class TimsAutomatedTests {
         System.out.println("Variable 'totalCostBeforeShipping' value is: " + totalCostBeforeShipping);
         String expectedTotal = formatDecimalsForCurrency(999 * Float.valueOf(costPerItem));
         assertEquals("Actual and Expected Total costs don't match", expectedTotal, totalCostBeforeShipping); //confirm amount matches expected
-        Thread.sleep(9000);
-    }
+     }
 
     @Test
     public void automationPracticeCheckout() throws InterruptedException {
@@ -211,15 +208,28 @@ public class TimsAutomatedTests {
 
         clearFieldAndSendTextToField(quantity_wanted, "2");
         driver.findElement(By.name("Submit")).click();
-        Thread.sleep(2000);
+
+        //Check number of items in cart
         driver.findElement(By.partialLinkText("Proceed to checkout")).click();
-        String confirmNumberOfItemsInCart = checkNumberOfItemsInCart.toString();
-        assertEquals("Actual number of items didn't match expected","2 Products",driver.findElement(checkNumberOfItemsInCart).getText());
+        assertEquals("'Actual' didn't match 'Expected'","2 Products",driver.findElement(checkNumberOfItemsInCart).getText());
+
+        //Add to cart and re-check count
+        driver.findElement(By.className("icon-plus")).click();
+        TimeUnit.SECONDS.sleep(1);
+        assertEquals("'Actual' didn't match 'Expected'","3 Products",driver.findElement(checkNumberOfItemsInCart).getText());
+
+        //Subtract from cart and re-check count
+        driver.findElement(By.className("icon-minus")).click();
+        TimeUnit.SECONDS.sleep(1);
+        driver.findElement(By.className("icon-minus")).click();
+        TimeUnit.SECONDS.sleep(1);
+        assertEquals("'Actual' didn't match 'Expected'","1 Product",driver.findElement(checkNumberOfItemsInCart).getText());
+
+        clearFieldAndSendTextToField(checkOutScreenQuantityTextField,"11");
+        TimeUnit.SECONDS.sleep(1);
+        assertEquals("'Actual' didn't match 'Expected'","11 Product",driver.findElement(checkNumberOfItemsInCart).getText());
 
         WebElement modalProceedToCheckoutButton = driver.findElement(By.partialLinkText("Proceed to checkout"));
         modalProceedToCheckoutButton.click();
-
-        Thread.sleep(2000);
-
     }
 }
