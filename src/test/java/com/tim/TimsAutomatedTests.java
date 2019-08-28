@@ -61,7 +61,7 @@ public class TimsAutomatedTests {
     private By checkForSuccessText = By.cssSelector(".alert-success");
     private By modalProceedToCheckoutButton = By.partialLinkText("Proceed to checkout");
     private By checkNumberOfItemsInCart = By.id(("summary_products_quantity"));
-    private By checkOutScreenQuantityTextField = By.className("#cart_quantity_input #form-control grey");
+    private By checkOutScreenQuantityTextField = By.className("cart_quantity_input");
 
     @BeforeClass
     public static void beforeClassSetup() {
@@ -227,9 +227,25 @@ public class TimsAutomatedTests {
 
         clearFieldAndSendTextToField(checkOutScreenQuantityTextField,"11");
         TimeUnit.SECONDS.sleep(1);
-        assertEquals("'Actual' didn't match 'Expected'","11 Product",driver.findElement(checkNumberOfItemsInCart).getText());
+        assertEquals("'Actual' didn't match 'Expected'","11 Products",driver.findElement(checkNumberOfItemsInCart).getText());
 
         WebElement modalProceedToCheckoutButton = driver.findElement(By.partialLinkText("Proceed to checkout"));
         modalProceedToCheckoutButton.click();
+    }
+
+    @Test
+    public void addMultipleItemsToCartEditContents () throws InterruptedException  {
+        clearFieldAndSendTextToField(searchTextField, "Blouse");
+        driver.findElement(By.name("submit_search")).click();
+        driver.findElement(By.partialLinkText("Printed Summer Dress")).click();
+        driver.findElement(By.name("Submit")).click();
+        driver.findElement(By.className("cross")).click();
+
+        driver.findElement(By.partialLinkText("http://automationpractice.com/index.php?id_category=3&controller=category"));//Women bttn
+        clearFieldAndSendTextToField(searchTextField, "T-Shirt");
+        driver.findElement(By.name("submit_search")).click();
+        driver.findElement(By.partialLinkText("Faded Short Sleeve T-shirts")).click();
+        driver.findElement(By.name("Submit")).click();
+        Thread.sleep(3000);
     }
 }
