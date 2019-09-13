@@ -1,5 +1,6 @@
 package com.tim;
 
+import junit.framework.Assert;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -56,12 +57,17 @@ public class TimsAutomatedTests {
     private By searchTextField = By.id ("search_query_top");
     private By emailTextField = By.id("email_create");
     private By checkboxOnAddressConfirmation = By.id("addressesAreEquals");
-    private boolean isChecked;
     private By agreeToTermsOfServiceCheckbox = By.id("cgv");
     private By checkForSuccessText = By.cssSelector(".alert-success");
     private By modalProceedToCheckoutButton = By.partialLinkText("Proceed to checkout");
     private By checkNumberOfItemsInCart = By.id(("summary_products_quantity"));
     private By checkOutScreenQuantityTextField = By.className("cart_quantity_input");
+    private boolean isChecked;
+    private By addToCartButton = By.name("submit_search");
+    private By womenButtonOnMenuBar = By.partialLinkText("Women");
+    private By searchMagnifyingGlassButton = By.name("submit_search");
+    private By addItemToCartButton = By.name("Submit");
+    private By cartSummaryproceedToCheckoutButton = By.partialLinkText("Proceed to checkout");
 
     @BeforeClass
     public static void beforeClassSetup() {
@@ -83,25 +89,22 @@ public class TimsAutomatedTests {
         driver.get("http://automationpractice.com/index.php");
     }
 
-    @After
+
+   @After
     public void afterTestCleanup(){
         Actions actions = new Actions(driver);
         actions.moveToElement(driver.findElement(By.cssSelector(".shopping_cart .ajax_cart_quantity"))).perform();
-        driver.findElement(By.className("ajax_cart_block_remove_link")).click();
+        driver.findElement(By.className(".ajax_cart_block_remove_link")).click();
     }
+
 
     @Test
     public void productQuantityFieldValidations() throws InterruptedException {
-//      Testing using a sample site
-//        1. Open browser-moved to Before class
-//      #---Moved to Before Class---#
-//        2. Go to website
-//      #---Moved to Before Class---#
-//        3. Enter search criteria
+//      From landing page, enter search criteria
         clearFieldAndSendTextToField(searchTextField,"summer");
 
 //        4. click Search button
-        driver.findElement(By.name("submit_search")).click();
+        driver.findElement(searchMagnifyingGlassButton).click();
 
 //        5. Click a link from search results
         driver.findElement(By.partialLinkText("Printed Chiffon Dress")).click();
@@ -113,11 +116,11 @@ public class TimsAutomatedTests {
         driver.findElement(By.name("Submit")).click();
 
 //       7. Confirm cost of order
-        driver.findElement(By.partialLinkText("Proceed to checkout")).click();
+        driver.findElement(modalProceedToCheckoutButton).click();
 
  //     ****** Should I use BigDecimal instead of double? ******
         String numberOfItemsInCart = driver.findElement(By.cssSelector("#summary_products_quantity")).getText().replace(" Products","");
-        assertEquals("Expected x but found y items in cart",(0+Integer.valueOf(numberOfItemsInCart)),999);
+        assertEquals("Unexpected number of items in cart",(0+Integer.valueOf(numberOfItemsInCart)),999);
         System.out.println("There are "+ numberOfItemsInCart +" items in the cart.");
         System.out.println("Expected is: " +(999 * Float.valueOf(costPerItem)));
 
@@ -139,14 +142,14 @@ public class TimsAutomatedTests {
         clearFieldAndSendTextToField(searchTextField, "faded");
 
 //        4. click Search button
-        driver.findElement(By.name("submit_search")).click();
+        driver.findElement(searchMagnifyingGlassButton).click();
 
 //        5. Click a link from search results
         driver.findElement(By.partialLinkText("Faded Short Sleeve T-shirts")).click();
 
 //        6. Add a large number in Quantity field
         clearFieldAndSendTextToField(quantity_wanted, "1");
-        driver.findElement(By.name("Submit")).click();
+        driver.findElement(addItemToCartButton).click();
 
 //       7. Confirm cost of order
         assertEquals(16.51, (16.51 * 1), 0); //confirm amount matches expected
@@ -155,8 +158,8 @@ public class TimsAutomatedTests {
 //        8. Proceed through checkout steps
         String testEmail = UUID.randomUUID().toString();
         testEmail = testEmail.substring(0, Math.min(testEmail.length(), 8)); // ---truncating the email address but not sure how!--- //
-        driver.findElement(By.cssSelector("#layer_cart > div.clearfix > div.layer_cart_cart.col-xs-12.col-md-6 > div.button-container > a > span")).click();//Proceed to Checkout button on modal
-        driver.findElement(By.cssSelector("#center_column > p.cart_navigation.clearfix > a.button.btn.btn-default.standard-checkout.button-medium > span")).click(); //proceed to checkout button on Cart Summary page
+        driver.findElement(modalProceedToCheckoutButton).click();
+        driver.findElement(cartSummaryproceedToCheckoutButton).click();
         clearFieldAndSendTextToField(emailTextField, testEmail + "@testing.net");
         System.out.println("Test email is: " +testEmail + "@testing.net");
         driver.findElement(By.id("SubmitCreate")).click();
@@ -196,14 +199,14 @@ public class TimsAutomatedTests {
         driver.findElement(By.className("cheque")).click();//Payment Method
         driver.findElement(By.cssSelector("#cart_navigation > button > span")).click();
         String saleConfirmation = checkForSuccessText.toString();
-        assertEquals("Did not find expected 'Success' text", "Your order on My Store is complete.",driver.findElement(checkForSuccessText).getText());
+        assertEquals("Did not find expected 'Success' text", "Your order on My Store is complete.",           driver.findElement(checkForSuccessText).getText());
     }
 
     @Test
     public void editShoppingCartContentsAndConfirmCartUpdatesCorrectly ()throws InterruptedException{
 //        3. Enter search criteria
         clearFieldAndSendTextToField(searchTextField, "printed summer dress");
-        driver.findElement(By.name("submit_search")).click();
+        driver.findElement(addToCartButton).click();
         driver.findElement(By.partialLinkText("Faded Short Sleeve T-shirts")).click();
 
         clearFieldAndSendTextToField(quantity_wanted, "2");
@@ -226,9 +229,10 @@ public class TimsAutomatedTests {
         assertEquals("'Actual' didn't match 'Expected'","1 Product",driver.findElement(checkNumberOfItemsInCart).getText());
 
         clearFieldAndSendTextToField(checkOutScreenQuantityTextField,"11");
-        TimeUnit.SECONDS.sleep(1);
+        TimeUnit.SECONDS.sleep(2);
         assertEquals("'Actual' didn't match 'Expected'","11 Products",driver.findElement(checkNumberOfItemsInCart).getText());
-
+        //placed a stop point at ln 232 and visually confirmed 11 items. Not sure why this is failing
+        //Increased sleep time (a terrible approach, I know) and the test passing. ??
         WebElement modalProceedToCheckoutButton = driver.findElement(By.partialLinkText("Proceed to checkout"));
         modalProceedToCheckoutButton.click();
     }
@@ -237,15 +241,25 @@ public class TimsAutomatedTests {
     public void addMultipleItemsToCartEditContents () throws InterruptedException  {
         clearFieldAndSendTextToField(searchTextField, "Blouse");
         driver.findElement(By.name("submit_search")).click();
+        driver.findElement(addToCartButton).click();
         driver.findElement(By.partialLinkText("Printed Summer Dress")).click();
         driver.findElement(By.name("Submit")).click();
-        driver.findElement(By.className("cross")).click();
+        driver.findElement(modalProceedToCheckoutButton).click();
+        assertEquals("'Actual' didn't match 'Expected'","1 Product",driver.findElement(checkNumberOfItemsInCart).getText());
 
-        driver.findElement(By.partialLinkText("http://automationpractice.com/index.php?id_category=3&controller=category"));//Women bttn
-        clearFieldAndSendTextToField(searchTextField, "T-Shirt");
-        driver.findElement(By.name("submit_search")).click();
-        driver.findElement(By.partialLinkText("Faded Short Sleeve T-shirts")).click();
+        driver.findElement(womenButtonOnMenuBar).click();
+        driver.findElement(By.partialLinkText("Printed Dress")).click();
         driver.findElement(By.name("Submit")).click();
-        Thread.sleep(3000);
+        driver.findElement(modalProceedToCheckoutButton).click();
+        assertEquals("'Actual' didn't match 'Expected'","2 Products",driver.findElement(checkNumberOfItemsInCart).getText());
+
+        driver.findElement(womenButtonOnMenuBar).click();
+        driver.findElement(By.partialLinkText("Printed Chiffon Dress")).click();
+        driver.findElement(By.name("Submit")).click();
+        driver.findElement(modalProceedToCheckoutButton).click();
+        assertEquals("'Actual' didn't match 'Expected'","3 Products",driver.findElement(checkNumberOfItemsInCart).getText());
+
+
+
     }
 }
